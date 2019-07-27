@@ -1,0 +1,26 @@
+- hosts: all
+  remote_user: ubuntu
+  gather_facts: false
+  tasks:
+    - name: Check for Python
+      raw: test -e /usr/bin/python
+      changed_when: false
+      failed_when: false
+      register: check_python
+
+    - name: Install Python
+      raw: sudo apt -y update && sudo apt install -y python
+      when: check_python.rc != 0
+      become: true
+
+- hosts: all
+  roles:
+    - k3s-common
+
+- hosts: masters
+  roles:
+    - k3s-master
+
+- hosts: workers
+  roles:
+    - k3s-worker

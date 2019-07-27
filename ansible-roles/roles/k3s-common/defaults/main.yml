@@ -1,0 +1,4 @@
+---
+k3s_version: v0.7.0
+
+k3s_bin_url: "https://github.com/rancher/k3s/releases/download/{{ k3s_version }}/k3s"

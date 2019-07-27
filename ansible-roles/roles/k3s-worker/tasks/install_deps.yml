@@ -1,0 +1,20 @@
+---
+- name: Set k3s master facts
+  set_fact:
+    master_node_ip: "{{ hostvars[groups['masters'][0]]['ansible_host'] }}"
+    node_join_token: "{{ hostvars[groups['masters'][0]]['k3s_join_token'] }}"
+
+- name: Create k3s agent service
+  template:
+    src: k3s-agent.service.j2
+    dest: /etc/systemd/system/k3s-agent.service
+  become: true
+
+- name: Start and enable k3s-agent
+  systemd:
+    name: k3s-agent
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  become: true
+
